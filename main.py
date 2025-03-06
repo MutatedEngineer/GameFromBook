@@ -20,6 +20,16 @@ WHITE = (254, 254, 254)
 Объекты
 '''
 # функции и классы
+class Player(pygame.sprite.Sprite):
+    #main character
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.images = []
+        for i in range(1, 5):
+            img = pygame.image.load(os.path.join('images', 'walk0' + str(i) + '.png')).convert()
+            self.images.append(img)
+            self.image = self.images[0]
+            self.rect = self.image.get_rect()
 '''
 Настройка
 '''
@@ -30,6 +40,11 @@ world = pygame.display.set_mode([worldx, worldy])
 backdrop = pygame.image.load(os.path.join('images', 'stage.png'))
 backdropbox = world.get_rect()
 
+player = Player() #create character
+player.rect.x = 0
+player.rect.y = 0
+player_list = pygame.sprite.Group()
+player_list.add(player)
 '''
 Главный цикл
 '''
@@ -51,5 +66,6 @@ while main:
                 main = False
     world.fill(BLUE)
     world.blit(backdrop, backdropbox)
+    player_list.draw(world)
     pygame.display.flip()
     clock.tick(fps)
