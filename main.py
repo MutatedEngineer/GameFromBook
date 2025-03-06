@@ -5,7 +5,7 @@ import os
 '''
 Переменные
 '''
-# Сюда поместить переменные
+# Сюда поместить переменные-константы
 worldx = 960
 worldy = 720
 fps = 40
@@ -21,7 +21,7 @@ WHITE = (254, 254, 254)
 '''
 # функции и классы
 class Player(pygame.sprite.Sprite):
-    #main character
+    # класс двигающегося персонажа
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.images = []
@@ -40,7 +40,7 @@ world = pygame.display.set_mode([worldx, worldy])
 backdrop = pygame.image.load(os.path.join('images', 'stage.png'))
 backdropbox = world.get_rect()
 
-player = Player() #create character
+player = Player() # создание объекта персонажа и его координаты
 player.rect.x = 0
 player.rect.y = 0
 player_list = pygame.sprite.Group()
@@ -66,6 +66,6 @@ while main:
                 main = False
     world.fill(BLUE)
     world.blit(backdrop, backdropbox)
-    player_list.draw(world)
+    player_list.draw(world) # создание постоянного фрейма персонажа
     pygame.display.flip()
     clock.tick(fps)
