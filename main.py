@@ -15,6 +15,7 @@ main = True
 BLUE = (25, 25, 200)
 BLACK = (23, 23, 23)
 WHITE = (254, 254, 254)
+ALPHA = (0, 255, 0) #альфа канал, заливка
 
 '''
 Объекты
@@ -27,6 +28,8 @@ class Player(pygame.sprite.Sprite):
         self.images = []
         for i in range(1, 5):
             img = pygame.image.load(os.path.join('images', 'walk0' + str(i) + '.png')).convert()
+            img.convert_alpha() # оптимизацияф альфа диапазона
+            img.set_colorkey(ALPHA) # все пиксели этого цвета станут прозрачными
             self.images.append(img)
             self.image = self.images[0]
             self.rect = self.image.get_rect()
