@@ -25,6 +25,10 @@ class Player(pygame.sprite.Sprite):
     # класс двигающегося персонажа
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
+        self.movex = 0 # перемещение по X
+        self.movey = 0 # перемещение по Y
+        self.frame = 0 # подсчет кадров
+
         self.images = []
         for i in range(1, 5):
             img = pygame.image.load(os.path.join('images', 'walk0' + str(i) + '.png')).convert()
@@ -33,6 +37,29 @@ class Player(pygame.sprite.Sprite):
             self.images.append(img)
             self.image = self.images[0]
             self.rect = self.image.get_rect()
+
+    def control(self, x, y):
+        # управление перемещением персонажа
+        self.movex += x
+        self.movey += y
+
+    def update(self):
+        # обновление позиции спрайта
+        self.rect.x = self.rect.x + self.movex
+        self.rect.y = self.rect.y + self.movey
+        # движение влево
+        if self.movex < 0:
+            self.frame += 1
+            if self.frame > 3 * ani:
+                self.frame = 0
+            self.image = pygame.transform.flip(self.images[self.frame // ani], True, False)
+        # движение вправо
+        if self.movex > 0:
+            self.frame += 1
+            if self.frame > 3 * ani:
+                self.frame = 0
+            self.image = self.images[self.frame // ani]
+
 '''
 Настройка
 '''
@@ -48,6 +75,8 @@ player.rect.x = 0
 player.rect.y = 0
 player_list = pygame.sprite.Group()
 player_list.add(player)
+steps = 10 # количество пикселей для перемещения
+
 '''
 Главный цикл
 '''
@@ -55,20 +84,29 @@ player_list.add(player)
 while main:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            pygame.quit()
-            try:
-                sys.exit()
-            finally:
-                main = False
+            pygame.quit(); sys.exit()
+            main = False
+
         if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT or event.key == ord('a'):
+                player.control(- steps, 0)
+            if event.key == pygame.K_RIGHT or event.key == ord('d'):
+                player.control(steps, 0)
+            if event.key == pygame.K_UP or event.key == ord('w'):
+                print('jump')
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_LEFT or event.key == ord('a'):
+                player.control(steps, 0)
+            if event.key == pygame.K_RIGHT or event.key == ord('d'):
+                player.control(- steps, 0)
             if event.key == ord('q'):
                 pygame.quit()
-            try:
                 sys.exit()
-            finally:
                 main = False
+
     world.fill(BLUE)
     world.blit(backdrop, backdropbox)
+    player.update()
     player_list.draw(world) # создание постоянного фрейма персонажа
     pygame.display.flip()
     clock.tick(fps)
