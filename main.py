@@ -6,8 +6,8 @@ import os
 Переменные
 '''
 # Сюда поместить переменные-константы
-worldx = 960
-worldy = 720
+worldx = 1024
+worldy = 597
 fps = 40
 ani = 4
 main = True
@@ -15,19 +15,19 @@ main = True
 BLUE = (25, 25, 200)
 BLACK = (23, 23, 23)
 WHITE = (254, 254, 254)
-ALPHA = (0, 255, 0) #альфа канал, заливка
+ALPHA = (0, 255, 0) #Альфа канал, заливка
 
 '''
 Объекты
 '''
-# функции и классы
+#Функции и классы
 class Player(pygame.sprite.Sprite):
-    # класс двигающегося персонажа
+    #Класс двигающегося персонажа
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.movex = 0 # перемещение по X
-        self.movey = 0 # перемещение по Y
-        self.frame = 0 # подсчет кадров
+        self.movex = 0 #Перемещение по X
+        self.movey = 0 #Перемещение по Y
+        self.frame = 0 #Подсчет кадров
 
         self.images = []
         for i in range(1, 5):
@@ -60,27 +60,47 @@ class Player(pygame.sprite.Sprite):
                 self.frame = 0
             self.image = self.images[self.frame // ani]
 
+class Enemy(pygame.sprite.Sprite): #Создание врага
+
+    def __init__(self, x, y, img):
+        pygame.sprite.Sprite.__init__(self)
+
+        self.images = []
+        for i in range(1, 5):
+            img = pygame.image.load(os.path.join('images', '#Вставить название файлов' + str(i) + '.png')).convert()
+            img.convert_alpha()
+            img.set_colorkey(ALPHA)
+            self.images.append(img)
+            self.image = self.images[0]
+            self.rect = self.image.get_rect()
+
+
+
 '''
 Настройка
 '''
-# сюда код, выполняющийся однократно
+#Сюда код, выполняющийся однократно
 clock = pygame.time.Clock()
 pygame.init()
 world = pygame.display.set_mode([worldx, worldy])
-backdrop = pygame.image.load(os.path.join('images', 'stage.png'))
+backdrop = pygame.image.load(os.path.join('images', 'country-platform-preview.png'))
 backdropbox = world.get_rect()
 
-player = Player() # создание объекта персонажа и его координаты
+player = Player() #Создание объекта персонажа и его координаты
 player.rect.x = 0
-player.rect.y = 0
+player.rect.y = 290
 player_list = pygame.sprite.Group()
 player_list.add(player)
-steps = 10 # количество пикселей для перемещения
+steps = 10 #Количество пикселей для перемещения
+
+#enemy = Enemy(300, 290, '# Вставить название первого спрайта') #Создание объекта врага
+#enemy_list = pygame.sprite.Group() #Список группы врагов
+#enemy_list.add(enemy) #Добавление врага в список
 
 '''
 Главный цикл
 '''
-# игровой цикл
+#Игровой цикл
 while main:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
