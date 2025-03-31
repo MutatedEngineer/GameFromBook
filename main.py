@@ -9,8 +9,8 @@ import os
 worldx = 1024
 worldy = 597
 fps = 40
-ani = 4
-main = True
+ani = 4 #Константа для рассчета смены фреймов
+main = True #Основной цикл
 
 BLUE = (25, 25, 200)
 BLACK = (23, 23, 23)
@@ -117,6 +117,38 @@ class Level():
             print('Level' + str(lvl))
 
         return enemy_list
+    def ground(lvl, x, y, w, h):
+        #Функция земной тверди, добавить картинку на передний фон и ее координаты и размеры
+        ground_list = pygame.sprite.Group()
+        if lvl == 1:
+            ground = Platform(x, y, w, h, 'insert image')
+            ground_list.add(ground)
+        if lvl == 2:
+            print('Level' + str(lvl))
+
+    def platform(lvl):
+        #Функция платформ тайлов. первая большая, вторая маленькая, добавить картинки
+        plat_list = pygame.sprite.Group()
+        if lvl == 1:
+            plat = Platform(200, worldy-97-128, 285, 67, 'insert image')
+            plat_list.add(plat)
+            plat = Platform(500, worldy - 97 - 320, 2197, 54, 'insert image')
+            plat_list.add(plat)
+        if lvl == 2:
+            print('Level' + str(lvl))
+
+        return plat_list
+
+
+class Platform(pygame.sprite.Sprite):
+    def __init__(self, xloc, yloc, imgw, imgh, img):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load(os.path.join('insert image', img)).convert()
+        self.image.convert_alpha()
+        self.image.set_colorkey(ALPHA)
+        self.rect = self.image.get_rect()
+        self.rect.x = xloc
+        self.rect.y = yloc
 
 '''
 Настройка
@@ -138,6 +170,10 @@ steps = 10 #Количество пикселей для перемещения
 eloc = []
 eloc = [600, 467]
 enemy_list = Level.bad(1, eloc)
+
+#Изменить координаты и размеры в соответствии с картинкой
+ground_list = Level.ground(1, 0, worldy-97, 1080, 97)
+plat_list = Level.platform(1)
 
 '''
 Главный цикл
@@ -172,6 +208,8 @@ while main:
     player.update() #Cоздание постоянного фрейма персонажа
     player_list.draw(world)
     enemy_list.draw(world) #Cоздание постоянного фреймов врагов из списка
+    ground_list.draw(world) #Обновить землю
+    plat_list.draw(world) #Обновить платформы
     for e in enemy_list:
         e.move()
     pygame.display.flip()
